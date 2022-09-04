@@ -24,15 +24,26 @@ namespace StringChanger.Application.StringPreprocessor
         }
         public void Process(string input)
         {
-            var words = _stringSplitter.Split(input).ToList();
-
+            var words = _stringSplitter.Split(input);
+            var isFirst = true;
             foreach (var word in words)
             {
                 var trimedWord = word.Trim().ToLower();
+
                 if(trimedWord == string.Empty)
                 {
                     continue;
                 }
+
+                if (isFirst)
+                {
+                    isFirst = false;
+                }
+                else
+                {
+                    _stringBuilder.Append(" ");
+                }
+
                 if (trimedWord.StartsWith("при"))
                 {
                     _stringBuilder.Append("пре");
@@ -58,8 +69,7 @@ namespace StringChanger.Application.StringPreprocessor
                         _stringBuilder.Append(trimedWord);
                     }
                 }
-                if (word != words.Last())
-                    _stringBuilder.Append(" ");
+                    
             }
         }
     }
