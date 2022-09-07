@@ -19,17 +19,20 @@ namespace StringChanger.Tests
             // Assert
             tokenizer.GetTokens().Count.ShouldBe(1);
         }
-        [Theory]
-        [InlineData("w5")]
-        [InlineData("в5")]
-        [InlineData("y8")]
-        public void Digits_Should_Be_Separated_From_Letters(string data)
+        [Fact]
+        public void Tokenizer_Should_Have_Three_Endings()
         {
+            // Arrange
+            string data = "привет. пока! привет?";
             // Act
-
-
+            tokenizer.Clear();
+            for (int i = 0; i < data.Length; i++)
+            {
+                tokenizer.CheckCharWithPosition(data[i], i);
+            }
+            var result = tokenizer.GetTokens().Where(t => t.Value == "End").ToList();
             // Assert
-
+            result.Count.ShouldBe(3);
         }
         [Theory]
         [InlineData("werwerwer")]
