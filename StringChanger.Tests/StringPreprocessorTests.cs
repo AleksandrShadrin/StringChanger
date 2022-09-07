@@ -2,6 +2,7 @@
 using Shouldly;
 using StringChanger.Application.StringPreprocessor;
 using StringChanger.Application.StringSplitter;
+using StringChanger.Application.ValueObjects;
 
 namespace StringChanger.Tests
 {
@@ -12,7 +13,12 @@ namespace StringChanger.Tests
         {
             // Arrange
             string data = "один два три четыре !";
-            _stringSplitter.Split(Arg.Any<string>()).Returns(new List<string> { "один", " два", " три", " четыре", " !" });
+            _stringSplitter.Split(Arg.Any<string>()).Returns(new List<Sentence> {
+                new Sentence
+                {
+                    Words = new List<string> { "один", "два", "три", "четыре", "!" }
+                }
+            });
 
             // Act
             _stringPreprocessor.Process(data);
@@ -27,14 +33,19 @@ namespace StringChanger.Tests
         {
             // Arrange
             string data = "приветствие_слово_432423";
-            _stringSplitter.Split(Arg.Any<string>()).Returns(new List<string> { "приветствие", "_", "слово", "_", "432423"});
+            _stringSplitter.Split(Arg.Any<string>()).Returns(new List<Sentence> {
+                new Sentence
+                {
+                    Words = new List<string> { "приветствие", "_", "слово", "_", "432423" }
+                }
+            });
 
             // Act
             _stringPreprocessor.Process(data);
             var result = _stringPreprocessor.GetProcessedString();
 
             // Assert
-            result.ShouldBe("преветствии _ слово _ 432423");
+            result.ShouldBe("приветствии _ слово _ 432423");
         }
 
         #region ARRANGE

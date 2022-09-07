@@ -14,10 +14,10 @@ namespace StringChanger.Tests
         public void Character_Should_Be_A_Token(char data)
         {
             // Act
-            tokenizer.AddChar(data);
+            tokenizer.CheckCharWithPosition(data, 0);
 
             // Assert
-            tokenizer.IsToken().ShouldBeTrue();
+            tokenizer.GetTokens().Count.ShouldBe(1);
         }
         [Theory]
         [InlineData("w5")]
@@ -26,11 +26,10 @@ namespace StringChanger.Tests
         public void Digits_Should_Be_Separated_From_Letters(string data)
         {
             // Act
-            tokenizer.AddChar(data[0]);
-            tokenizer.AddChar(data[1]);
+
 
             // Assert
-            tokenizer.IsToken().ShouldBeTrue();
+
         }
         [Theory]
         [InlineData("werwerwer")]
@@ -39,18 +38,16 @@ namespace StringChanger.Tests
         public void String_Has_Not_Tokens(string data)
         {
             //Arrange
-            bool result = false;
             tokenizer.Clear();
 
             // Act
-            foreach (var sym in data)
+            for (int i = 0; i < data.Length; i++)
             {
-                tokenizer.AddChar(sym);
-                result |= tokenizer.IsToken();
+                tokenizer.CheckCharWithPosition(data[i], i);
             }
 
             // Assert
-            result.ShouldBeFalse();
+            tokenizer.GetTokens().Count.ShouldBe(0);
         }
         #region ARRANGE
         private readonly ITokenizer tokenizer;

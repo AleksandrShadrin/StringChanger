@@ -1,7 +1,9 @@
-﻿namespace StringChanger.Application.StringSplitter
+﻿using StringChanger.Application.ValueObjects;
+
+namespace StringChanger.Application.StringSplitter
 {
     public interface IStringSplitter
     {
-        IEnumerable<string> Split(string line);
+        IEnumerable<Sentence> Split(string line);
     }
 }

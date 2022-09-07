@@ -1,4 +1,5 @@
-﻿using NSubstitute;
+﻿
+using NSubstitute;
 using Shouldly;
 using StringChanger.Application.StringSplitter;
 using StringChanger.Application.StringTokenizer;
@@ -12,27 +13,28 @@ namespace StringChanger.Tests
         {
             // Arrange
             string line = "один два три четыре";
-
+            tokenizer.GetTokens().Returns(new Dictionary<int, string>
+            {
+                {4, "Split"},
+                {8, "Split"},
+                {12, "Split"},
+            });
             // Act
-            var result = stringSplitter.Split(line).ToArray();
+            var result = stringSplitter.Split(line).ToArray().First().Words;
 
             // Assert
-            result.ShouldBeEquivalentTo(new string[] {"один", " два", " три", " четыре" });
+            result.ShouldContain("один");
+            result.ShouldContain("два");
+            result.ShouldContain("три");
+            result.ShouldContain("четыре");
         }
 
         #region ARRANGE
         private readonly IStringSplitter stringSplitter;
+        private readonly ITokenizer tokenizer;
         public StringSplitterTests()
         {
-            ITokenizer tokenizer = Substitute.For<ITokenizer>();
-            tokenizer
-                .When(x => x.AddChar(Arg.Is<char>(a => a == ' ')))
-                .Do( x => tokenizer.IsToken().Returns(true));
-
-            tokenizer
-                .When(x => x.AddChar(Arg.Is<char>(a => a != ' ')))
-                .Do(x => tokenizer.IsToken().Returns(false));
-
+            tokenizer = Substitute.For<ITokenizer>();
             stringSplitter = new StringSplitter(tokenizer);
         }
         #endregion

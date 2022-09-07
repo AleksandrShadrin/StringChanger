@@ -4,34 +4,34 @@ namespace StringChanger.Application.StringTokenizer
 {
     public class Tokenizer : ITokenizer
     {
-        private Queue<char> token = new();
-        public void AddChar(char ch)
+        private Dictionary<int, string> tokens = new();
+        public Dictionary<int, string> GetTokens()
         {
-            if (token.Count < 2)
-            {
-                token.Enqueue(ch);
-            }
-            else
-            {
-                token.Enqueue(ch);
-                token.Dequeue();
-            }
+            return tokens;
+        }
+        public void CheckCharWithPosition(char ch, int chPosition)
+        {
+            AddIfToken(ch, chPosition);
         }
 
         public void Clear()
         {
-            token.Clear();
+            tokens.Clear();
         }
 
-        public bool IsToken()
+        private void AddIfToken(char ch, int chPosition)
         {
-            var last = token.Last().ToString();
-            var first = token.First().ToString();
-            var result = Regex.IsMatch(last, @"[\W_]");
-            result = result || Regex.IsMatch(first, @"[\W_]") && Regex.IsMatch(last, @"[а-яА-Яa-zA-Z0-9]");
-            result = result || Regex.IsMatch(first, @"[а-яА-Яa-zA-Z]") && Regex.IsMatch(last, @"\d");
-
-            return result;
+            if(Regex.IsMatch(ch.ToString(), @"[\W_]"))
+            {
+                if(ch == '.')
+                {
+                    tokens.Add(chPosition,"End");
+                }
+                else
+                {
+                    tokens.Add(chPosition, "Split");
+                }
+            }
         }
     }
 }

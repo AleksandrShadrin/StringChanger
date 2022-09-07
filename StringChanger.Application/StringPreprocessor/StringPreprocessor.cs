@@ -24,53 +24,59 @@ namespace StringChanger.Application.StringPreprocessor
         }
         public void Process(string input)
         {
-            var words = _stringSplitter.Split(input);
-            var isFirst = true;
-            foreach (var word in words)
+            var sentences = _stringSplitter.Split(input);
+            
+            foreach (var sentence in sentences)
             {
-                var trimedWord = word.Trim().ToLower();
+                int counter = 1;
+                foreach (var word in sentence.Words)
+                {
+                    var trimedWord = word.Trim().ToLower();
 
-                if(trimedWord == string.Empty)
-                {
-                    continue;
-                }
-
-                if (isFirst)
-                {
-                    isFirst = false;
-                }
-                else
-                {
-                    _stringBuilder.Append(" ");
-                }
-
-                if (trimedWord.StartsWith("при"))
-                {
-                    _stringBuilder.Append("пре");
-                    if (trimedWord.EndsWith("ие"))
+                    if (trimedWord == string.Empty)
                     {
-                        _stringBuilder.Append(trimedWord[3..^2]);
-                        _stringBuilder.Append("ии");
+                        continue;
+                    }
+
+                    if (counter == 1)
+                    {
+                        if (trimedWord.EndsWith("ие"))
+                        {
+                            _stringBuilder.Append(trimedWord[0..^2]);
+                            _stringBuilder.Append("ии");
+                        }
+                        else
+                        {
+                            _stringBuilder.Append(trimedWord);
+                        }
                     }
                     else
                     {
-                        _stringBuilder.Append(trimedWord[3..^0]);
+                        _stringBuilder.Append(" ");
                     }
-                }
-                else
-                {
-                    if (trimedWord.EndsWith("ие"))
-                    {
-                        _stringBuilder.Append(trimedWord[0..^2]);
-                        _stringBuilder.Append("ии");
-                    }
-                    else
+
+                    if(counter > 1 && counter < sentence.Words.Count)
                     {
                         _stringBuilder.Append(trimedWord);
                     }
+
+                    if(counter == sentence.Words.Count)
+                    {
+                        if (trimedWord.StartsWith("при"))
+                        {
+                            _stringBuilder.Append("пре");
+                            _stringBuilder.Append(trimedWord[3..^0]);
+                        }
+                        else
+                        {
+                            _stringBuilder.Append(trimedWord);
+                        }
+                    }
+
+                    counter++;
                 }
-                    
             }
+            
         }
     }
 }

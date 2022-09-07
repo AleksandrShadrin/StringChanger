@@ -2,8 +2,8 @@
 {
     public interface ITokenizer
     {
+        Dictionary<int, string> GetTokens();
+        void CheckCharWithPosition(char ch, int chPosition);
         void Clear();
-        void AddChar(char ch);
-        bool IsToken();
     }
 }
