@@ -16,20 +16,29 @@ namespace StringChanger.Tests
             tokenizer.GetTokens().Returns(new Dictionary<int, string>
             {
                 {6, "End"},
+                {7, "Split"},
                 {12, "End"},
+                {13, "Split"},
                 {20, "End"},
             });
             // Act
             var result = stringSplitter.Split(data)
-                .Where(s 
-                    => !String.IsNullOrWhiteSpace(String.Join("",s.Words)))
+                .Where(s
+                    => !String.IsNullOrWhiteSpace(String.Join("", s.Words)))
+                .Select(s =>
+                {
+                    s.Words = s.Words
+                        .Where(w => !String.IsNullOrWhiteSpace(w))
+                        .ToList();
+                    return s;
+                })
                 .ToList();
 
             // Assert
             result.Count.ShouldBe(3);
-            result[0].Words.ToArray().ShouldBeEquivalentTo(new string[] {"привет", "."});
-            result[1].Words.ToArray().ShouldBeEquivalentTo(new string[] {" пока", "!"});
-            result[2].Words.ToArray().ShouldBeEquivalentTo(new string[] { " привет", "?" });
+            result[0].Words.ToArray().ShouldBeEquivalentTo(new string[] { "привет", "." });
+            result[1].Words.ToArray().ShouldBeEquivalentTo(new string[] { "пока", "!" });
+            result[2].Words.ToArray().ShouldBeEquivalentTo(new string[] { "привет", "?" });
         }
 
         [Fact]
