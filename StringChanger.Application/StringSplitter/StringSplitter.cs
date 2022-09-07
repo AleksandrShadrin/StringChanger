@@ -35,6 +35,7 @@ namespace StringChanger.Application.StringSplitter
                 }
                 if (item.Value == "End")
                 {
+                    sentences.Last().Words.Add(line[item.Key].ToString());
                     sentences.Add(new Sentence());
                 }
                 prevPos = item.Key;

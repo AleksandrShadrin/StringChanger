@@ -23,7 +23,7 @@ namespace StringChanger.Application.StringTokenizer
         {
             if(Regex.IsMatch(ch.ToString(), @"[\W_]"))
             {
-                if(ch == '.')
+                if(".!?".Contains(ch))
                 {
                     tokens.Add(chPosition,"End");
                 }
